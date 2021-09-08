@@ -1,0 +1,10 @@
+from discord.ext import commands
+
+@commands.command()
+async def "Command Name"(ctx, args):
+    ...
+    Code
+    ...
+
+def setup(bot):
+    bot.add_command("Command Name")
