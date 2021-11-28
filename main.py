@@ -9,7 +9,8 @@ os.system('clear')
 
 # bot client
 PREFIX = os.getenv('PREFIX')
-client = commands.Bot(command_prefix=PREFIX,  help_command=None, case_insensitive=True)
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix=PREFIX, intents=intents, help_command=None, case_insensitive=True)
 
 # add command to client
 error_module = load(client)
@@ -64,8 +65,6 @@ async def ping(ctx):
 @client.event 
 async def on_command_error(ctx, error): 
   if isinstance(error, commands.CommandNotFound): 
-    print(error)
-  if isinstance(error, discord.HTTPException):
     print(error)
 
 @client.event

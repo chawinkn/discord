@@ -17,8 +17,6 @@ async def japan(ctx):
     description = f"** {movie} - [Search]({link}) **",
     color = discord.Colour.magenta()
   )
-  embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
-  embed.set_footer(text=f"Requested by {ctx.message.author}")
   await ctx.send(embed=embed)
 
 def setup(bot):

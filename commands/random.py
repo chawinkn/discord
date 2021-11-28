@@ -23,7 +23,6 @@ async def random(ctx):
     description = movie_list,
     color = discord.Colour.magenta()
   )
-  embed.set_footer(text=f"Requested by {ctx.message.author}")
   await ctx.send(embed=embed)
 
 def setup(bot):

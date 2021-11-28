@@ -1,5 +1,5 @@
 from discord.ext import commands
-from api import dateColor, dateInfo
+from helper import dateColor, dateInfo
 import discord
 
 @commands.command(aliases=['date'])
