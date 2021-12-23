@@ -1,9 +1,10 @@
 import discord
 import os
-from discord.ext import commands
+from discord.ext import commands, tasks
+from itertools import cycle
 from keep_alive import keep_alive
 from command_loader import load
-from helper import printList
+from helper import printList, rateLimit
 
 os.system('clear')
 
@@ -69,7 +70,15 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_ready():
+  change_status.start()
   print('We have logged in as {0.user}'.format(client))
 
+status = cycle(['$help','$help'])
+
+@tasks.loop(seconds=10)
+async def change_status():
+  await client.change_presence(activity=discord.Game(next(status)))
+
 keep_alive()
+rateLimit()
 client.run(os.getenv('TOKEN'))
