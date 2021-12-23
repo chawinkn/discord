@@ -43,20 +43,21 @@ async def classes(ctx):
         )
         embed.set_image(url="https://tokanoon.chawinkn.repl.co/assets/images/schedule.png")
         embed.set_footer(text="**หมายเหตุ** - ลำดับของคาบเรียนอาจไม่ตรงกับตารางเรียน")
-        return await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
+        break
     else:
       embed = discord.Embed(
         title=f"🤔  There is no class right now", 
         description="แต่ให้ตารางไปก่อนละกัน",color=discord.Colour.gold()
       ) 
       embed.set_image(url="https://tokanoon.chawinkn.repl.co/assets/images/schedule.png")
-      return await ctx.send(embed=embed)
+      await ctx.send(embed=embed)
   else:
     embed = discord.Embed(
       title=f"😬  There is no class today", 
       color=discord.Colour.gold()
     )
-    return await ctx.send(embed=embed)
+    await ctx.send(embed=embed)
 
 def setup(bot):
   bot.add_command(classes)

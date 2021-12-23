@@ -1,6 +1,5 @@
 from discord.ext import commands
 import discord
-import asyncio
 
 @commands.command()
 async def clear(ctx, *args):
