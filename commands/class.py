@@ -1,62 +1,70 @@
 from discord.ext import commands
+from sheet import sheetData
+from Time import timeCheck
 from helper import dateColor, bangkok
-import discord
-
-with open("src/subject.txt", "r", encoding="utf-8") as f:
-  lst = [[j.strip() for j in i.split(" ", 11)] for i in f]
+import discord  
 
 @commands.command(aliases=['class', 'schedule', 'c', 'sc'])
 async def classes(ctx):
-  d = bangkok().strftime("%a")
-  h = bangkok().strftime("%H")
-  m = bangkok().strftime("%M")
+  currentTime = bangkok().strftime("%a %H %M").split()
+  [day, hour, minute] = currentTime
 
-  day = ["Mon", "Tue", "Wed", "Thu", "Fri"]
-  period = [
-    ['0810', '0850'], ['0850', '0930'], 
-    ['0930', '0940'], ['0940', '1020'], 
-    ['1020', '1100'], ['1100', '1140'], 
-    ['1140', '1220'], ['1220', '1230'], 
-    ['1230', '1310'], ['1310', '1350'],
-    ['1350', '1400'], ['1400', '1440']
+  # You can edit excel file in src
+  classData = sheetData(
+    "src/schedule.xlsx", "B2:M6"
+  )
+
+  period =  [
+    "08:10", "08:50",
+    "09:30", "09:40",
+    "10:20", "11:00",
+    "11:40", "12:20",
+    "12:30", "13:10",
+    "13:50", "14:00",
+    "14:40"
   ]
 
-  if d in day:
-    this = lst[day.index(d)]
-    for i in period:
-      hr, mn = i[0], i[1]
-      if int(h+m) in range(int(hr), int(mn)):
-        embed=discord.Embed(
-          title = f'📚  Class {period.index(i)+1} ({hr[:2]}:{hr[2:]} - {mn[:2]}:{mn[2:]} น.)',
-          description = "สามารถดูตารางเรียนและข้อมูลอื่นๆ ได้ที่ https://bit.ly/3jRv1pQ",
-          color = dateColor()
-        )
-        embed.add_field(
-          name = "Subject : ", 
-          value = f"{this[period.index(i)]}", 
-          inline = True
-        )
-        embed.add_field(
-          name = "Next : ",
-          value = f"{this[period.index(i)+1] if period.index(i)+1 < len(this) else '-'}",
-          inline = True
-        )
-        embed.set_image(url="https://tokanoon.chawinkn.repl.co/assets/images/schedule.png")
-        embed.set_footer(text="**หมายเหตุ** - ลำดับของคาบเรียนอาจไม่ตรงกับตารางเรียน")
-        await ctx.send(embed=embed)
-        break
-    else:
-      embed = discord.Embed(
-        title=f"🤔  There is no class right now", 
-        description="แต่ให้ตารางไปก่อนละกัน",color=discord.Colour.gold()
-      ) 
-      embed.set_image(url="https://tokanoon.chawinkn.repl.co/assets/images/schedule.png")
-      await ctx.send(embed=embed)
+  classToday = classData[day]
+  classIndex = timeCheck(
+    hour, minute, period
+  )
+  classNow = classToday[classIndex]
+  classRange = f"{period[classIndex]} - {period[classIndex + 1]} น."
+  classNext = classToday[classIndex + 1] if classIndex + 1 < len(classToday) else "-"
+  classNo =  classIndex + 1 if "พัก" not in classNow else "พัก"
+
+  if day not in [*classData]:
+    embed = discord.Embed(
+      title = f"🤔  There is no classes in this day",
+      color = discord.Colour.gold()
+    )
+    return await ctx.send(embed=embed)
+  
+  if classIndex == -1:
+    embed = discord.Embed(
+      title = f"🤔  There is no classes now",
+      color = discord.Colour.gold()
+    )
+    await ctx.send(embed=embed)
+    
   else:
     embed = discord.Embed(
-      title=f"😬  There is no class today", 
-      color=discord.Colour.gold()
+      title = f'📚  Class {classNo} ({classRange})',
+      description = "สามารถดูตารางเรียนและข้อมูลอื่นๆ ได้ที่ https://bit.ly/3jRv1pQ",
+      color = dateColor()
     )
+    embed.add_field(
+      name = "Subject : ", 
+      value = f"{classNow}", 
+      inline = True
+    )
+    embed.add_field(
+      name = "Next : ",
+      value = f"{classNext}",
+      inline = True
+    )
+    embed.set_image(url="https://tokanoon.chawinkn.repl.co/assets/images/schedule.png")
+    embed.set_footer(text="**หมายเหตุ** - ลำดับของคาบเรียนอาจไม่ตรงกับตารางเรียน")
     await ctx.send(embed=embed)
 
 def setup(bot):
