@@ -24,6 +24,13 @@ async def classes(ctx):
     "14:40"
   ]
 
+  if day not in [*classData]:
+    embed = discord.Embed(
+      title = f"🤔  There is no classes in this day",
+      color = discord.Colour.gold()
+    )
+    return await ctx.send(embed=embed)
+
   classToday = classData[day]
   classIndex = timeCheck(
     hour, minute, period
@@ -32,13 +39,6 @@ async def classes(ctx):
   classRange = f"{period[classIndex]} - {period[classIndex + 1]} น."
   classNext = classToday[classIndex + 1] if classIndex + 1 < len(classToday) else "-"
   classNo =  classIndex + 1 if "พัก" not in classNow else "พัก"
-
-  if day not in [*classData]:
-    embed = discord.Embed(
-      title = f"🤔  There is no classes in this day",
-      color = discord.Colour.gold()
-    )
-    return await ctx.send(embed=embed)
   
   if classIndex == -1:
     embed = discord.Embed(
