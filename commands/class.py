@@ -38,7 +38,7 @@ async def classes(ctx):
   classNow = classToday[classIndex]
   classRange = f"{period[classIndex]} - {period[classIndex + 1]} น."
   classNext = classToday[classIndex + 1] if classIndex + 1 < len(classToday) else "-"
-  classNo =  classIndex + 1 if "พัก" not in classNow else "พัก"
+  classNumber =  classIndex + 1 if "พัก" not in classNow else "พัก"
   
   if classIndex == -1:
     embed = discord.Embed(
@@ -49,7 +49,7 @@ async def classes(ctx):
     
   else:
     embed = discord.Embed(
-      title = f'📚  Class {classNo} ({classRange})',
+      title = f'📚  Class {classNumber} ({classRange})',
       description = "สามารถดูตารางเรียนและข้อมูลอื่นๆ ได้ที่ https://bit.ly/3jRv1pQ",
       color = dateColor()
     )
